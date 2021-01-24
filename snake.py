@@ -3,7 +3,7 @@ from collections import namedtuple
 
 lcd.init()
 
-Point = namedtuple('Point', ('x y'))
+Point = namedtuple('Point', ['x', 'y'])
 
 DELAY = 0.05
 BLOCK_SIZE = 15
