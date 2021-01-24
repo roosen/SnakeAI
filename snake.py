@@ -1,7 +1,6 @@
 import random, image, time, lcd, array, utime
 from collections import namedtuple
 
-lcd.init()
 
 Point = namedtuple('Point', ['x', 'y'])
 
@@ -42,10 +41,8 @@ class Game:
                 return Point(x, y)
 
 
-    def play(self):
-        # choose random turn for now
-        turn = random.randint(-1, 1)
-        self.direction = (self.direction + turn) % 4
+    def play(self, action):
+        self.direction = (self.direction + action) % 4
 
         # move head
         x = self.head.x
@@ -84,15 +81,20 @@ class Game:
         self.img.draw_circle((point.x * BLOCK_SIZE) + (BLOCK_SIZE // 2), (point.y * BLOCK_SIZE) + (BLOCK_SIZE // 2), BLOCK_SIZE // 2, color, fill=True)
 
 
-game = Game(lcd.width(), lcd.height())
-while True:
+if __name__ == '__main__':
+    lcd.init()
+    game = Game(lcd.width(), lcd.height())
+
     while True:
-        utime.sleep(DELAY)
-        game_over, score = game.play()
-        if game_over:
-            break;
-    lcd.clear()
-    lcd.draw_string(lcd.width() // 4, lcd.height() // 2, "GAME OVER", lcd.RED, lcd.BLACK)
-    lcd.draw_string(lcd.width() // 4, lcd.height() * 2 // 3, "Score: {}".format(score), lcd.RED, lcd.BLACK)
-    utime.sleep(1)
-    game.reset()
+        while True:
+            utime.sleep(DELAY)
+            # choose random turn for now
+            action = random.randint(-1, 1)
+            game_over, score = game.play(action)
+            if game_over:
+                break;
+        lcd.clear()
+        lcd.draw_string(lcd.width() // 4, lcd.height() // 2, "GAME OVER", lcd.RED, lcd.BLACK)
+        lcd.draw_string(lcd.width() // 4, lcd.height() * 2 // 3, "Score: {}".format(score), lcd.RED, lcd.BLACK)
+        utime.sleep(1)
+        game.reset()
